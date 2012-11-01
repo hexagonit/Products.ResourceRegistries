@@ -5,6 +5,10 @@ Changelog
 ------------------
 
 - Nothing changed yet.
+
+2.2.3.1 (2012-11-XX)
+--------------------
+
 - Added Move to top and bottom link to
   portal_css and portal_javascript templates.
   [taito]

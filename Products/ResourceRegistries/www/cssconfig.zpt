@@ -31,7 +31,6 @@ function exchangeSortValues(a, b) {
     return true;
 }
 
-
 function moveDown(node) {
     var node, fieldset, nextBlock = null;
     while (node.nodeName != 'FIELDSET') {
@@ -66,6 +65,10 @@ function moveUp(node) {
     }
 }
 
+function redirect(url) {
+    window.location= url
+}
+
 function shiftBlocks(fieldset, block) {
     while (block.nodeType == 3) {
          block = block.previousSibling;
@@ -93,13 +96,13 @@ form {
     margin-bottom: 3em;
 }
 
-fieldset label,fieldset input,fieldset  select {
+fieldset label, fieldset input, fieldset select {
     font-size: 80%;
     font-family: sans-serif;
     float: left;
 }
 
-legend input {
+legend input, legend select {
     float: none;
 }
 
@@ -122,6 +125,11 @@ fieldset {
 
 legend {
     font-size: 90%;
+}
+
+legend a {
+    font-size: 1.1em;
+    font-weight: bold;
 }
 
 #debugmodelabel {
@@ -217,31 +225,39 @@ ul {
             <input type="text" name="stylesheets.id:records" size="30"
                    tal:attributes="value stylesheet/getId" />
 
-                <a onclick="return moveUp(this);" href="#"
-                   title="Move up"
-                   tal:attributes="href string:moveResourceUp?id=${stylesheet/getQuotedId}">
-                     &uarr;
-                </a>
-                <a onclick="return moveDown(this);" href="#"
-                   title="Move down"
-                   tal:attributes="href string:moveResourceDown?id=${stylesheet/getQuotedId}">
-                     &darr;
-                </a>
-                <a style="text-decoration: overline"
-                   title="Move to top"
-                   tal:attributes="href string:moveResourceToTop?id=${stylesheet/getQuotedId}">
-                     &uarr;</a>
-                <a style="text-decoration: underline"
-                   title="Move to bottom"
-                   tal:attributes="href string:moveResourceToBottom?id=${stylesheet/getQuotedId}">
-                     &darr;</a>
-                <a href="#"
-                   title="Remove"
-                   style="color: red;"
-                   tal:attributes="href string:manage_removeStylesheet?id=${stylesheet/getQuotedId}">
-                    x
-                </a>
-                <span tal:condition="not:resourceExists">(resource not found or not accessible)</span>
+            <a href="#"
+               title="Remove"
+               style="color: red;"
+               tal:attributes="href string:manage_removeStylesheet?id=${stylesheet/getQuotedId}">x</a>
+            <a onclick="return moveUp(this);" href="#"
+               title="Move up"
+               tal:attributes="href string:moveResourceUp?id=${stylesheet/getQuotedId}">&uarr;</a>
+            <a onclick="return moveDown(this);" href="#"
+               title="Move down"
+               tal:attributes="href string:moveResourceDown?id=${stylesheet/getQuotedId}">&darr;</a>
+            <a style="border-top: 2px solid"
+               title="Move to top"
+               tal:attributes="href string:moveResourceToTop?id=${stylesheet/getQuotedId}">&uarr;</a>
+            <a style="border-bottom: 2px solid"
+               title="Move to bottom"
+               tal:attributes="href string:moveResourceToBottom?id=${stylesheet/getQuotedId}">&darr;</a>
+            <select onchange="redirect(this.value)">
+              <option>Move before</option>
+              <tal:option tal:repeat="res context/getResources">
+                <option tal:condition="python: res.getId() != stylesheet.getId()"
+                        tal:attributes="value string:moveResourceBefore?id=${stylesheet/getQuotedId}&dest_id=${res/getQuotedId}"
+                        tal:content="res/getId" />
+              </tal:option>
+            </select>
+            <select onchange="redirect(this.value)">
+              <option>Move after</option>
+              <tal:option tal:repeat="res context/getResources">
+                <option tal:condition="python: res.getId() != stylesheet.getId()"
+                        tal:attributes="value string:moveResourceAfter?id=${stylesheet/getQuotedId}&dest_id=${res/getQuotedId}"
+                        tal:content="res/getId" />
+              </tal:option>
+            </select>
+            <span tal:condition="not:resourceExists">(resource not found or not accessible)</span>
         </legend>
 
         <div class="stylesheetform">

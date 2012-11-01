@@ -66,6 +66,10 @@ function moveUp(node) {
     }
 }
 
+function redirect(url) {
+    window.location= url
+}
+
 function shiftBlocks(fieldset, block) {
     while (block.nodeType == 3) {
          block = block.previousSibling;
@@ -99,7 +103,7 @@ fieldset label,fieldset input,fieldset  select {
     float: left;
 }
 
-legend input {
+legend input, legend select{
     float: none;
 }
 
@@ -124,6 +128,10 @@ legend {
     font-size: 90%;
 }
 
+legend a {
+    font-size: 1.1em;
+    font-weight: bold;
+}
 
 #debugmodelabel {
     font-weight : bold;
@@ -203,29 +211,37 @@ legend {
             <input type="text" name="scripts.id:records:string" size="30"
                    tal:attributes="value script/getId" />
 
-            <a onclick="return moveUp(this);" href="#"
-               title="Move up"
-               tal:attributes="href string:moveResourceUp?id=${script/getQuotedId}">
-                 &uarr;
-            </a>
-            <a onclick="return moveDown(this);" href="#"
-               title="Move down"
-               tal:attributes="href string:moveResourceDown?id=${script/getQuotedId}">
-                 &darr;
-            </a>
-            <a style="text-decoration: overline"
-               title="Move to top"
-               tal:attributes="href string:moveResourceToTop?id=${script/getQuotedId}">
-                 &uarr;</a>
-            <a style="text-decoration: underline"
-               title="Move to bottom"
-               tal:attributes="href string:moveResourceToBottom?id=${script/getQuotedId}">
-                 &darr;</a>
             <a href="#" tal:attributes="href string:manage_removeScript?id=${script/getQuotedId}"
                style="color: red;"
-               title="Remove">
-                 x
-            </a>
+               title="Remove">x</a>
+            <a onclick="return moveUp(this);" href="#"
+               title="Move up"
+               tal:attributes="href string:moveResourceUp?id=${script/getQuotedId}">&uarr;</a>
+            <a onclick="return moveDown(this);" href="#"
+               title="Move down"
+               tal:attributes="href string:moveResourceDown?id=${script/getQuotedId}">&darr;</a>
+            <a style="border-top: 2px solid"
+               title="Move to top"
+               tal:attributes="href string:moveResourceToTop?id=${script/getQuotedId}">&uarr;</a>
+            <a style="border-bottom: 2px solid"
+               title="Move to bottom"
+               tal:attributes="href string:moveResourceToBottom?id=${script/getQuotedId}">&darr;</a>
+            <select onchange="redirect(this.value)">
+              <option>Move before</option>
+              <tal:option tal:repeat="res context/getResources">
+                <option tal:condition="python: res.getId() != script.getId()"
+                        tal:attributes="value string:moveResourceBefore?id=${script/getQuotedId}&dest_id=${res/getQuotedId}"
+                        tal:content="res/getId" />
+              </tal:option>
+            </select>
+            <select onchange="redirect(this.value)">
+              <option>Move after</option>
+              <tal:option tal:repeat="res context/getResources">
+                <option tal:condition="python: res.getId() != script.getId()"
+                        tal:attributes="value string:moveResourceAfter?id=${script/getQuotedId}&dest_id=${res/getQuotedId}"
+                        tal:content="res/getId" />
+              </tal:option>
+            </select>
             <span tal:condition="not:resourceExists">(resource not found or not accessible)</span>
         </legend>
 

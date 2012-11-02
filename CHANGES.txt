@@ -7,10 +7,17 @@ Changelog
 - Nothing changed yet.
 
 
+2.0.9.1 (2012-11-02)
+--------------------
+
+- Added Move to top and bottom link and Move befor and after options to
+  portal_css and portal_javascript templates.
+  [taito]
+
 2.0.9 (2012-04-18)
 ------------------
 
-- Revert a change which introduced HTML5 code into the XHTML 1.0 validated 4.1 
+- Revert a change which introduced HTML5 code into the XHTML 1.0 validated 4.1
   branch. Refs http://dev.plone.org/ticket/12803
   [esteele]
 
@@ -56,7 +63,7 @@ Changelog
   rel="stylesheet" data-rel="kinetic-stylesheet" type="text/kss" /> to fix HTML5
   validation. References http://dev.plone.org/plone/ticket/11300
   [spliter]
-  
+
 - Add MANIFEST.in.
   [WouterVH]
 
@@ -481,7 +488,7 @@ Changelog
 
 - Extended the GenericSetup import step to support positioning of resources:
   the 'position-before' and 'position-after' attributes cause the resource
-  to be positioned before or after resource named in the attribute. 
+  to be positioned before or after resource named in the attribute.
   'position-top' and 'position-bottom' move a resource to the top or bottom.
   [mj]
 

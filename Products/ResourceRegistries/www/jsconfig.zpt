@@ -20,7 +20,7 @@ function getSortInput(node) {
     }
     return null;
 }
- 
+
 function exchangeSortValues(a, b) {
     var aInput = getSortInput(a);
     var bInput = getSortInput(b);
@@ -30,8 +30,8 @@ function exchangeSortValues(a, b) {
     bInput.value = tmp;
     return true;
 }
- 
- 
+
+
 function moveDown(node) {
     var node, fieldset, nextBlock = null;
     while (node.nodeName != 'FIELDSET') {
@@ -48,7 +48,7 @@ function moveDown(node) {
         }
     }
 }
- 
+
 function moveUp(node) {
     var node, fieldset, previousBlock = null;
     while (node.nodeName != 'FIELDSET') {
@@ -65,7 +65,11 @@ function moveUp(node) {
         }
     }
 }
- 
+
+function redirect(url) {
+    window.location= url
+}
+
 function shiftBlocks(fieldset, block) {
     while (block.nodeType == 3) {
          block = block.previousSibling;
@@ -93,13 +97,13 @@ div.scriptform{
     clear: both;
 }
 
-fieldset label,fieldset input,fieldset  select {
+fieldset label, fieldset input, fieldset select {
     font-size: 80%;
     font-family: sans-serif;
     float: left;
 }
 
-legend input {
+legend input, legend select {
     float: none;
 }
 
@@ -124,6 +128,10 @@ legend {
     font-size: 90%;
 }
 
+legend a {
+    font-size: 1.1em;
+    font-weight: bold;
+}
 
 #debugmodelabel {
     font-weight : bold;
@@ -161,26 +169,26 @@ legend {
         In development mode, scripts are not merged to composites, and
         caching and compression of JS is disabled. The registry also sends
         HTTP headers to prevent browsers from caching the stylesheets.
-        Useful for testing JS modifications. 
+        Useful for testing JS modifications.
     </p>
     <ul>
     <li>Will affect all Plone instances, not just the one you change the setting in, so be careful.</li>
     <li>The setting will not be saved between restarts to avoid accidental performance degradation.</li>
     </ul>
-    
+
     <hr/>
 
     <p>The order of the scripts in this form is the same as the
     order in the header of the resulting HTML code.
     Use the up/down arrows to change the rendering order.</p>
-    
+
     <p>Defined scripts can exist as a browser resource, an item in a skin
     layer, or as a complete URL. An IE-only
     <a href="http://msdn.microsoft.com/en-us/library/ms537512.aspx">Conditional
     Comment</a> may be specified and will be printed in the form of:
     &lt;!--[if <em>Condition</em>]&gt;...&lt;![endif]--&gt;
     </p>
-    
+
     <p>Please use care as external resources defined without SSL may cause an
     error to be displayed in a user's browser if they are visiting your site
     using SSL.</p>
@@ -203,21 +211,37 @@ legend {
             <input type="text" name="scripts.id:records:string" size="30"
                    tal:attributes="value script/getId" />
 
-            <a onclick="return moveUp(this);" href="#"
-               title="Move up"
-               tal:attributes="href string:moveResourceUp?id=${script/getQuotedId}">
-                 &uarr;
-            </a>
-            <a onclick="return moveDown(this);" href="#"
-               title="Move down"
-               tal:attributes="href string:moveResourceDown?id=${script/getQuotedId}">
-                 &darr;
-            </a>
             <a href="#" tal:attributes="href string:manage_removeScript?id=${script/getQuotedId}"
                style="color: red;"
-               title="Remove">
-                 x
-            </a>
+               title="Remove">x</a>
+            <a onclick="return moveUp(this);" href="#"
+               title="Move up"
+               tal:attributes="href string:moveResourceUp?id=${script/getQuotedId}">&uarr;</a>
+            <a onclick="return moveDown(this);" href="#"
+               title="Move down"
+               tal:attributes="href string:moveResourceDown?id=${script/getQuotedId}">&darr;</a>
+            <a style="border-top: 2px solid"
+               title="Move to top"
+               tal:attributes="href string:moveResourceToTop?id=${script/getQuotedId}">&uarr;</a>
+            <a style="border-bottom: 2px solid"
+               title="Move to bottom"
+               tal:attributes="href string:moveResourceToBottom?id=${script/getQuotedId}">&darr;</a>
+            <select onchange="redirect(this.value)">
+              <option>Move before</option>
+              <tal:option tal:repeat="res context/getResources">
+                <option tal:condition="python: res.getId() != script.getId()"
+                        tal:attributes="value string:moveResourceBefore?id=${script/getQuotedId}&dest_id=${res/getQuotedId}"
+                        tal:content="res/getId" />
+              </tal:option>
+            </select>
+            <select onchange="redirect(this.value)">
+              <option>Move after</option>
+              <tal:option tal:repeat="res context/getResources">
+                <option tal:condition="python: res.getId() != script.getId()"
+                        tal:attributes="value string:moveResourceAfter?id=${script/getQuotedId}&dest_id=${res/getQuotedId}"
+                        tal:content="res/getId" />
+              </tal:option>
+            </select>
             <span tal:condition="not:resourceExists">(resource not found or not accessible)</span>
         </legend>
 
@@ -230,11 +254,11 @@ legend {
             <label>Condition</label>
             <input type="text" name="scripts.expression:records:string" size="25"
                    tal:attributes="value script/getExpression" />
-            
-            <label>Conditional Comment (IE Only)</label> 
+
+            <label>Conditional Comment (IE Only)</label>
             <input type="text" name="scripts.conditionalcomment:records:string"
                    tal:attributes="value script/getConditionalcomment" />
-                
+
             <label>Compression type</label>
             <select name="scripts.compression:records">
                 <option tal:define="options python:test(script.isExternalResource(),here.getExternalCompressionOptions(),here.getCompressionOptions())"
@@ -296,12 +320,12 @@ legend {
             <label>Condition</label>
             <input type="text" name="expression" size="50" />
         </div>
-        
+
         <div>
-            <label>Conditional Comment (IE Only)</label> 
+            <label>Conditional Comment (IE Only)</label>
             <input type="text" name="conditionalcomment" size="50" />
         </div>
-          
+
         <div>
             <label>Inline rendering?</label>
             <input type="checkbox" name="inline" value="0" />

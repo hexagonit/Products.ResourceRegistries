@@ -6,6 +6,11 @@ Changelog
 
 - Nothing changed yet.
 
+2.2.3.2 (2012-11-19)
+--------------------
+
+- Updated cosmetics. [taito]
+
 2.2.3.1 (2012-11-01)
 --------------------
 

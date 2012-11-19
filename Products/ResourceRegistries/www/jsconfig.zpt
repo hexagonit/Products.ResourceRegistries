@@ -124,6 +124,10 @@ fieldset {
     clear: both;
 }
 
+select.move {
+    width: 10em;
+}
+
 legend {
     font-size: 90%;
 }
@@ -208,7 +212,7 @@ legend a {
                    tal:attributes="checked script/getEnabled" />
             <input type="hidden" name="scripts.enabled:records:boolean:default" value="False" />
 
-            <input type="text" name="scripts.id:records:string" size="30"
+            <input type="text" name="scripts.id:records:string" size="50"
                    tal:attributes="value script/getId" />
 
             <a href="#" tal:attributes="href string:manage_removeScript?id=${script/getQuotedId}"
@@ -226,7 +230,7 @@ legend a {
             <a style="border-bottom: 2px solid"
                title="Move to bottom"
                tal:attributes="href string:moveResourceToBottom?id=${script/getQuotedId}">&darr;</a>
-            <select onchange="redirect(this.value)">
+            <select class="move" onchange="redirect(this.value)">
               <option>Move before</option>
               <tal:option tal:repeat="res context/getResources">
                 <option tal:condition="python: res.getId() != script.getId()"
@@ -234,7 +238,7 @@ legend a {
                         tal:content="res/getId" />
               </tal:option>
             </select>
-            <select onchange="redirect(this.value)">
+            <select class="move" onchange="redirect(this.value)">
               <option>Move after</option>
               <tal:option tal:repeat="res context/getResources">
                 <option tal:condition="python: res.getId() != script.getId()"

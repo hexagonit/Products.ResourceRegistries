@@ -114,13 +114,16 @@ fieldset label {
     clear: left;
 }
 
-
 fieldset {
     margin: 0.2em;
     border: 1px solid black;
     margin-bottom: 0.5em;
     padding-bottom: 0;
     clear: both;
+}
+
+select.move {
+    width: 10em;
 }
 
 legend {
@@ -222,7 +225,7 @@ ul {
                    tal:attributes="checked stylesheet/getEnabled" />
             <input type="hidden" name="stylesheets.enabled:records:boolean:default" value="False" />
 
-            <input type="text" name="stylesheets.id:records" size="30"
+            <input type="text" name="stylesheets.id:records" size="50"
                    tal:attributes="value stylesheet/getId" />
 
             <a href="#"
@@ -241,7 +244,7 @@ ul {
             <a style="border-bottom: 2px solid"
                title="Move to bottom"
                tal:attributes="href string:moveResourceToBottom?id=${stylesheet/getQuotedId}">&darr;</a>
-            <select onchange="redirect(this.value)">
+            <select class="move" onchange="redirect(this.value)">
               <option>Move before</option>
               <tal:option tal:repeat="res context/getResources">
                 <option tal:condition="python: res.getId() != stylesheet.getId()"
@@ -249,7 +252,7 @@ ul {
                         tal:content="res/getId" />
               </tal:option>
             </select>
-            <select onchange="redirect(this.value)">
+            <select class="move" onchange="redirect(this.value)">
               <option>Move after</option>
               <tal:option tal:repeat="res context/getResources">
                 <option tal:condition="python: res.getId() != stylesheet.getId()"
